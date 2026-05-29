@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── VD Studios TerraAI Palette (mirrors vdstudios.co.nz) ─────────────────── */
+:root {
+  /* Surfaces */
+  --background:        220 13% 5%;
+  --foreground:        180 10% 96%;
+  --muted:             220 12% 12%;
+  --muted-foreground:  215 15% 60%;
+  --border:            220 14% 14%;
+
+  /* Brand — cyan primary, emerald secondary */
+  --primary:           187 100% 52%;
+  --primary-foreground: 220 20% 6%;
+  --primary-glow:      187 100% 65%;
+  --secondary:         152 85% 50%;
+  --secondary-foreground: 220 20% 6%;
+  --secondary-glow:    152 90% 60%;
+  --accent:            187 100% 52%;
+  --accent-foreground: 220 20% 6%;
+
+  /* Semantic */
+  --profit:            86 95% 55%;
+  --profit-foreground: 220 20% 6%;
+  --risk:              0 90% 60%;
+  --risk-foreground:   0 0% 100%;
+
+  /* Legacy aliases kept for Tailwind colour tokens */
+  --emerald-glow:      152 85% 50%;
+  --cyan-glow:         187 100% 52%;
+  --silver:            215 15% 75%;
+  --silver-bright:     215 10% 92%;
+
+  /* Gradients */
+  --gradient-brand:    linear-gradient(135deg, hsl(187 100% 52%), hsl(152 85% 50%));
+  --gradient-radial:   radial-gradient(ellipse at top, hsl(187 100% 52% / .15), transparent 60%);
+  --gradient-surface:  linear-gradient(180deg, hsl(220 14% 8% / .8), hsl(220 14% 6% / .95));
+  --gradient-text:     linear-gradient(135deg, hsl(0 0% 100%), hsl(187 50% 85%));
+  --gradient-silver:   linear-gradient(135deg, hsl(0 0% 100%), hsl(187 50% 85%));
+  --gradient-emerald:  linear-gradient(135deg, hsl(187 100% 52%), hsl(152 85% 50%));
+  --gradient-glass:    linear-gradient(135deg, hsl(220 14% 100% / 0.04), hsl(220 14% 100% / 0.01));
+
+  /* Glows & shadows */
+  --glow-cyan:         0 0 40px hsl(187 100% 52% / .35), 0 0 80px hsl(187 100% 52% / .15);
+  --glow-emerald:      0 0 40px hsl(152 85% 50% / .35);
+  --shadow-elevated:   0 20px 60px -20px hsl(220 50% 0% / .8), 0 0 1px hsl(187 100% 52% / .3);
+  --shadow-card:       0 8px 30px -10px hsl(0 0% 0% / .6);
+
+  /* Motion */
+  --transition-smooth: cubic-bezier(.22, 1, .36, 1);
+}
+
+html {
+  color-scheme: dark;
+  background: hsl(var(--background));
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background-image: var(--gradient-radial);
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: hsl(0 0% 4%); }
+::-webkit-scrollbar-thumb { background: hsl(0 0% 18%); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--primary) / 0.6); }
+
+/* ── Component classes ───────────────────────────────────────────────────── */
+@layer components {
+  .font-serif-display {
+    font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+  }
+  .font-mono-tech {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .glass-pane {
+    background: var(--gradient-glass);
+    backdrop-filter: blur(24px) saturate(140%);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    border: 1px solid hsl(0 0% 100% / 0.06);
+    box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.05), 0 30px 80px -30px hsl(0 0% 0% / 0.9);
+  }
+  .silver-border {
+    position: relative;
+  }
+  .silver-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, hsl(0 0% 60% / 0.6), hsl(0 0% 20% / 0.1) 40%, hsl(0 0% 60% / 0.4));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  .silver-text {
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .brand-text {
+    background: var(--gradient-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .grid-bg {
+    background-image:
+      linear-gradient(hsl(0 0% 100% / 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(0 0% 100% / 0.025) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 75%);
+  }
+  .text-emerald { color: hsl(var(--secondary)); }
+  .bg-emerald { background-color: hsl(var(--secondary)); }
+  .border-emerald { border-color: hsl(var(--secondary)); }
+  .glow-cyan { box-shadow: var(--glow-cyan); }
+  .glow-emerald { box-shadow: var(--glow-emerald); }
+}
+

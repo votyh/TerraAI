@@ -1,0 +1,154 @@
+{
+  "metadata": {
+    "report_title": "TerraAI Property DNA Quantification Dataset",
+    "generated_date": "2026-05-02",
+    "currency": "NZD/AUD",
+    "regions_covered": ["Auckland_NZ", "Wellington_NZ", "Sydney_AU", "Melbourne_AU", "Brisbane_AU"]
+  },
+  "macro_baseline_cost_per_sqm_2026": {
+    "new_zealand": {
+      "auckland": {
+        "standard": {"low": 3500, "high": 4500, "source": "QV CostBuilder/Moneyhub 2026"},
+        "premium": {"low": 4800, "high": 6200, "source": "JRA Construction Guide 2026"},
+        "ultra_luxury": {"low": 7000, "high": 9000, "note": "Estimated based on top-tier projects"}
+      },
+      "wellington": {
+        "standard": {"low": 3000, "high": 4000},
+        "premium": {"low": 4200, "high": 5000}
+      }
+    },
+    "australia": {
+      "sydney": {
+        "standard": {"low": 2500, "high": 3400},
+        "premium": {"low": 3300, "high": 4700},
+        "ultra_luxury": {"low": 4800, "high": 7200},
+        "source": "Co-Architecture/Rawlinsons 2026"
+      },
+      "melbourne": {
+        "standard": {"low": 2200, "high": 3900, "source": "AS Estimation 2026"},
+        "premium": {"low": 3700, "high": 5300}
+      },
+      "brisbane": {
+        "standard": {"low": 2100, "high": 3800, "source": "AS Estimation 2026"},
+        "premium": {"low": 3500, "high": 4500}
+      }
+    }
+  },
+  "cpi_construction_inflation_24m": {
+    "new_zealand": {
+      "annual_rate": 1.1,
+      "forecast_2026": 2.4,
+      "material_volatility": {
+        "structural_timber_change_pct": 5.2,
+        "cladding_systems_change_pct": 5.0,
+        "concrete_change_pct": 4.5,
+        "plumbing_materials_change_pct": -1.5
+      },
+      "source": "QV CostBuilder Nov 2025, Macromonitor Jan 2025"
+    },
+    "australia": {
+      "annual_rate_feb2026": 3.7,
+      "forecast_sep2026": 5.5,
+      "home_cost_increase_since_pandemic_pct": 47,
+      "material_volatility": {
+        "cement_products_change_pct": 5.2,
+        "ceramics_change_pct": 2.6,
+        "steel_products_change_pct": -4.6
+      },
+      "source": "ABS Feb 2026, Master Builders Australia Jan 2026, Barrenjoey/AFR Apr 2026"
+    }
+  },
+  "decade_era_value_multiplier_matrix": {
+    "nz_villa_heritage_1900_1920": {
+      "special_character_area_premium_pct": 4.3,
+      "heritage_designation_penalty_pct": -9.6,
+      "nearby_heritage_spillover_premium_pct_per_place": 1.7,
+      "source": "Bade, Castillo, Fernandez & Aguilar-Bohorquez, Land Use Policy, 2020"
+    },
+    "nz_post_war_solid_1950_1960": {
+      "implicit_premium_over_1990s_build": {"low_pct": 3, "high_pct": 7},
+      "note": "Premium is not formally structured but derived from stigma avoidance and maintenance perception."
+    },
+    "nz_au_leaky_building_era_1990_2004": {
+      "general_market_stigma_discount_pct": -11,
+      "unremediated_listing_discount_pct": {"low": -30, "high": -40},
+      "post_remediation_residual_stigma_discount_pct": {"low": -5, "high": -10},
+      "source": "Massey University Study (2017), Ross Holmes Lawyers, NZ Herald"
+    },
+    "modern_high_performance_2020_2026": {
+      "new_build_premium_over_existing_pct": 6,
+      "source": "CoreLogic NZ Estimates (2024)"
+    }
+  },
+  "cladding_roofing_performance": {
+    "brick_and_tile": {
+      "premium_over_weatherboard_pct": 20,
+      "annual_maintenance_load_aud": 200,
+      "source": "PGH Bricks & Pavers, RE Agent interviews"
+    },
+    "vertical_cedar": {
+      "aesthetic_premium_pct": {"low": 5, "high": 12},
+      "maintenance_load_5yr_cycle_aud": 5000,
+      "note": "Premium is highly design and suburb dependent."
+    },
+    "aac_panels_hebel": {
+      "premium_over_fibre_cement_pct": {"low": 3, "high": 5},
+      "maintenance_benefit": "Low maintenance, high insulative value."
+    },
+    "fibre_cement_weatherboard": {
+      "resale_underperformance_vs_brick_pct": {"low": -8, "high": -15},
+      "note": "Benchmark cladding. Value penalty increases over a 10-year cycle due to repainting costs."
+    }
+  },
+  "energy_insulation_premium": {
+    "australia_nathers": {
+      "value_add_per_star_pct": 1.3,
+      "value_add_per_star_sydney_aud": 21000,
+      "solar_pv_system_premium_pct": 2.7,
+      "source": "Cotality 'Watts it Worth' Report, Sept 2025"
+    },
+    "new_zealand_homestar": {
+      "resale_premium_estimate_pct": {"low": 4, "high": 6},
+      "30_year_total_savings_6_star_nzd": {"low": 62000, "high": 98000},
+      "source": "Infometrics Analysis for NZGBC, May 2025"
+    }
+  },
+  "renovation_roi_multiplier": {
+    "kitchen_overhaul": {
+      "budget_roi": {"low": 0.7, "high": 1.2},
+      "high_end_roi": {"low": 0.5, "high": 0.8}
+    },
+    "ensuite_addition": {
+      "value_add_pct_of_home_value": 5,
+      "roi_multiplier": {"low": 1.0, "high": 1.5}
+    },
+    "retrofit_double_glazing": {
+      "direct_resale_roi_multiplier": {"low": 0.4, "high": 0.7},
+      "value_add_pct": {"low": 2, "high": 4}
+    },
+    "landscape_street_appeal": {
+      "high_kerb_appeal_premium_pct": 7,
+      "poor_street_appeal_penalty_pct": -25,
+      "roi_multiplier": {"low": 1.5, "high": 4.0}
+    }
+  },
+  "geospatial_zoning_risk_discounts": {
+    "flood_plain_1_in_100_year": {
+      "australia_discount_pct": -10.8,
+      "source": "UTS Research (Shi et al.), Brokernews 2024"
+    },
+    "flood_plain_1_in_500_year": {
+      "australia_discount_pct": -4.4,
+      "source": "UTS Research"
+    },
+    "overland_flow_path": {
+      "nz_auckland_discount_pct": {"low": -5, "high": -10},
+      "note": "Risk of development restrictions and insurance loading."
+    },
+    "coastal_erosion_zone": {
+      "nz_auckland_downzoned_discount_pct": {"low": -10, "high": -25},
+      "nsw_australia_uninsurable_risk_discount_pct": {"low": -10, "high": -20},
+      "source": "Auckland Council (2025), WSP/Helen Clark Foundation Report (2024)"
+    }
+  }
+}

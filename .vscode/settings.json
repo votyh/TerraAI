@@ -1,0 +1,5 @@
+{
+  // Prevent VS Code from auto-downloading @types into the global TS cache,
+  // which conflicts with the project-local @types/node@22.
+  "typescript.disableAutomaticTypeAcquisition": true
+}
