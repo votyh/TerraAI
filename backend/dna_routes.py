@@ -160,20 +160,20 @@ class CalculateRequest(BaseModel):
     city:       Optional[str] = None
     tier:       Literal["standard", "premium", "ultra_luxury"] = "standard"
     # Extended fields from 5-step form
-    propertyType: Optional[str] = None
-    titleType:    Optional[str] = None
-    roofType:     Optional[str] = None
-    condition:    Optional[str] = None
-    renovation:   Optional[str] = None
-    insulation:   Optional[list[str]] = None
-    heating:      Optional[list[str]] = None
-    carparks:     Optional[int] = Field(default=None, ge=0, le=20)
-    facing:       Optional[float] = Field(default=None, ge=0, lt=360)
-    slope:        Optional[str] = None
-    views:        Optional[list[str]] = None
-    schoolZone:   Optional[str] = None
-    noiseLevel:   Optional[str] = None
-    access:       Optional[str] = None
+    property_type: Optional[str] = None
+    title_type:    Optional[str] = None
+    roof_type:     Optional[str] = None
+    condition:     Optional[str] = None
+    renovation:    Optional[str] = None
+    insulation:    Optional[list[str]] = None
+    heating:       Optional[list[str]] = None
+    carparks:      Optional[int] = Field(default=None, ge=0, le=20)
+    facing:        Optional[float] = Field(default=None, ge=0, lt=360)
+    slope:         Optional[str] = None
+    views:         Optional[list[str]] = None
+    school_zone:   Optional[str] = None
+    noise_level:   Optional[str] = None
+    access:        Optional[str] = None
 
 
 class DnaFactor(BaseModel):
