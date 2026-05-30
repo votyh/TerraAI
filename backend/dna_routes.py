@@ -87,6 +87,53 @@ _ASSET_MAP: dict[str, str] = {
 }
 
 
+# Suburb → canonical city mapping so the DNA engine can find the right
+# base_cost_per_sqm entry even when the frontend sends a suburb name.
+_SUBURB_TO_CITY: dict[str, str] = {
+    # Auckland
+    "ponsonby": "auckland", "herne bay": "auckland", "remuera": "auckland",
+    "parnell": "auckland", "newmarket": "auckland", "westmere": "auckland",
+    "freemans bay": "auckland", "grey lynn": "auckland", "kingsland": "auckland",
+    "mt eden": "auckland", "mount eden": "auckland", "epsom": "auckland",
+    "sandringham": "auckland", "grafton": "auckland", "meadowbank": "auckland",
+    "mission bay": "auckland", "st heliers": "auckland", "kohimarama": "auckland",
+    "devonport": "auckland", "takapuna": "auckland", "milford": "auckland",
+    "bayswater": "auckland", "avondale": "auckland", "new lynn": "auckland",
+    "henderson": "auckland", "waitakere": "auckland", "otahuhu": "auckland",
+    "papatoetoe": "auckland", "manukau": "auckland", "flat bush": "auckland",
+    "botany": "auckland", "pukekohe": "auckland", "pokeno": "auckland",
+    "albany": "auckland", "orewa": "auckland", "whangaparaoa": "auckland",
+    "howick": "auckland", "pakuranga": "auckland", "papakura": "auckland",
+    # Wellington
+    "thorndon": "wellington", "kelburn": "wellington", "brooklyn": "wellington",
+    "mount victoria": "wellington", "mt victoria": "wellington", "te aro": "wellington",
+    "newtown": "wellington", "karori": "wellington", "hataitai": "wellington",
+    "island bay": "wellington", "aro valley": "wellington", "wadestown": "wellington",
+    "petone": "wellington", "lower hutt": "wellington", "upper hutt": "wellington",
+    "porirua": "wellington", "paraparaumu": "wellington",
+    # Christchurch
+    "fendalton": "christchurch", "merivale": "christchurch", "riccarton": "christchurch",
+    "cashmere": "christchurch", "st albans": "christchurch", "linwood": "christchurch",
+    "sydenham": "christchurch", "spreydon": "christchurch", "papanui": "christchurch",
+}
+
+
+def _resolve_city(suburb_or_city: Optional[str], address: str) -> str:
+    """
+    Resolve a suburb or city name to a canonical city key understood by
+    the DNA engine (auckland, wellington, christchurch, sydney, ...).
+    """
+    _known_cities = {"auckland", "wellington", "christchurch",
+                     "sydney", "melbourne", "brisbane"}
+    if suburb_or_city:
+        s = suburb_or_city.strip().lower()
+        if s in _known_cities:
+            return s
+        if s in _SUBURB_TO_CITY:
+            return _SUBURB_TO_CITY[s]
+    return _detect_city(address)
+
+
 def _detect_city(address: str) -> str:
     """Lightweight city heuristic until LINZ/GIS resolution is wired."""
     a = (address or "").lower()
@@ -156,7 +203,7 @@ async def calculate(
     Run the async DNA engine. Anonymous callers get the Base Valuation;
     authenticated + paid callers also get `dna_breakdown` & reasoning.
     """
-    city        = (body.city or _detect_city(body.address)).lower()
+    city        = _resolve_city(body.city, body.address)
     property_id = hash_property_id(address=body.address, city=city)
 
     is_paid = False
