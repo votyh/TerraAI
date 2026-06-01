@@ -136,60 +136,64 @@ class LINZClient:
                 source="LINZ Data Service (NZ)",
             )
 
-        # ── Phase 2 live implementation ──────────────────────────────────
-        # async with httpx.AsyncClient(timeout=10.0) as client:
-        #     # Step 1: Geocode address → coordinates
-        #     geocode_resp = await client.get(
-        #         f"{self.BASE_URL}/geocode/",
-        #         params={"q": address, "key": self._linz_key},
-        #     )
-        #     geocode_resp.raise_for_status()
-        #     results = geocode_resp.json().get("results", [])
-        #     if not results:
-        #         return ParcelResult(
-        #             data_available=False,
-        #             error="Address not found in LINZ geocoder.",
-        #             source="LINZ Data Service (NZ)",
-        #         )
-        #     lat = results[0]["geometry"]["y"]
-        #     lon = results[0]["geometry"]["x"]
-        #
-        #     # Step 2: Spatial intersect → NZ Parcels (Layer 50804)
-        #     parcel_resp = await client.get(
-        #         f"{self.BASE_URL}/tables/layer-{self.PARCELS_LAYER}/features/",
-        #         params={
-        #             "key": self._linz_key,
-        #             "intersects": f"POINT({lon} {lat})",
-        #             "srsname": "EPSG:4326",
-        #             "limit": 1,
-        #         },
-        #     )
-        #     parcel_resp.raise_for_status()
-        #     features = parcel_resp.json().get("features", [])
-        #     if not features:
-        #         return ParcelResult(
-        #             data_available=False,
-        #             error="No parcel found at geocoded coordinates.",
-        #             source="LINZ Data Service (NZ)",
-        #         )
-        #     p = features[0]["properties"]
-        #     return ParcelResult(
-        #         data_available=True,
-        #         parcel_id=str(p["id"]),
-        #         title_ref=p.get("appro_no"),
-        #         latitude=lat,
-        #         longitude=lon,
-        #         land_area_sqm=p.get("land_area"),
-        #         source="LINZ Data Service (NZ) — Layer 50804",
-        #     )
-        # ─────────────────────────────────────────────────────────────────
+        try:
+            async with httpx.AsyncClient(timeout=10.0) as client:
+                # Step 1: Geocode address → coordinates via LINZ geocoder
+                geocode_resp = await client.get(
+                    f"{self.BASE_URL}/geocode/",
+                    params={"q": address, "key": self._linz_key},
+                )
+                geocode_resp.raise_for_status()
+                results = geocode_resp.json().get("results", [])
+                if not results:
+                    return ParcelResult(
+                        data_available=False,
+                        error="Address not found in LINZ geocoder.",
+                        source="LINZ Data Service (NZ)",
+                    )
+                lat = results[0]["geometry"]["y"]
+                lon = results[0]["geometry"]["x"]
 
-        return ParcelResult(
-            data_available=False,
-            error="LINZ live integration scheduled for Phase 2. "
-                  "API key is present but the endpoint is not yet activated.",
-            source="LINZ Data Service (NZ)",
-        )
+                # Step 2: Spatial intersect → NZ Parcels (Layer 50804)
+                parcel_resp = await client.get(
+                    f"{self.BASE_URL}/tables/layer-{self.PARCELS_LAYER}/features/",
+                    params={
+                        "key": self._linz_key,
+                        "intersects": f"POINT({lon} {lat})",
+                        "srsname": "EPSG:4326",
+                        "limit": 1,
+                    },
+                )
+                parcel_resp.raise_for_status()
+                features = parcel_resp.json().get("features", [])
+                if not features:
+                    return ParcelResult(
+                        data_available=False,
+                        error="No parcel found at geocoded coordinates.",
+                        source="LINZ Data Service (NZ)",
+                    )
+                p = features[0]["properties"]
+                return ParcelResult(
+                    data_available=True,
+                    parcel_id=str(p["id"]),
+                    title_ref=p.get("appro_no"),
+                    latitude=lat,
+                    longitude=lon,
+                    land_area_sqm=p.get("land_area"),
+                    source="LINZ Data Service (NZ) — Layer 50804",
+                )
+        except httpx.HTTPStatusError as exc:
+            return ParcelResult(
+                data_available=False,
+                error=f"LINZ API error {exc.response.status_code}: {exc.response.text[:200]}",
+                source="LINZ Data Service (NZ)",
+            )
+        except Exception as exc:  # noqa: BLE001
+            return ParcelResult(
+                data_available=False,
+                error=f"LINZ request failed: {exc}",
+                source="LINZ Data Service (NZ)",
+            )
 
     # ── Flood overlay ──────────────────────────────────────────────────────
 

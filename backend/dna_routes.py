@@ -42,6 +42,7 @@ from auth import (  # noqa: E402
     is_property_paid,
     mark_property_paid,
 )
+from services.gis_service import LINZClient  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
@@ -228,6 +229,17 @@ async def calculate(
             property_id=property_id,
         )
 
+    # ── LINZ parcel lookup (enriches land area from authoritative source) ──
+    linz = LINZClient()
+    linz_parcel = None
+    if linz.is_configured():
+        linz_parcel = await linz.resolve_address_to_parcel(body.address)
+
+    # Use LINZ land area if caller didn't supply one (or supplied 0)
+    land_area = float(body.landArea) if body.landArea > 0 else None
+    if land_area is None and linz_parcel and linz_parcel.data_available and linz_parcel.land_area_sqm:
+        land_area = float(linz_parcel.land_area_sqm)
+
     try:
         result = await calculate_dna_value(
             address       = body.address,
@@ -237,7 +249,7 @@ async def calculate(
             era           = _ERA_MAP[body.era],
             cladding      = _CLADDING_MAP[body.cladding],
             flood_risk    = _FLOOD_MAP.get(body.floodRisk),
-            land_area_sqm = float(body.landArea) if body.landArea > 0 else None,
+            land_area_sqm = land_area,
             bedrooms      = body.bedrooms,
             bathrooms     = body.bathrooms,
             assets        = [_ASSET_MAP[a] for a in body.assets if a in _ASSET_MAP],
@@ -268,7 +280,13 @@ async def calculate(
         response.final_value       = float(result.get("final_valuation", base_value))
         response.dna_breakdown     = [DnaFactor(**f) for f in breakdown]
         response.reasoning_strings = [f["reasoning_string"] for f in breakdown]
-        response.metadata          = result.get("metadata")
+        meta = result.get("metadata") or {}
+        if linz_parcel and linz_parcel.data_available:
+            meta["linz_parcel_id"]    = linz_parcel.parcel_id
+            meta["linz_title_ref"]    = linz_parcel.title_ref
+            meta["linz_land_area_m2"] = linz_parcel.land_area_sqm
+            meta["linz_source"]       = linz_parcel.source
+        response.metadata = meta
 
     return response
 
